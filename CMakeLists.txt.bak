@@ -207,10 +207,6 @@ if (OPT_BUILD_SCHEDULER)
 add_subdirectory("misc_modules/scheduler")
 endif (OPT_BUILD_SCHEDULER)
 
-if (OPT_BUILD_SEARCH_SCAN)
-add_subdirectory("misc_modules/search_scan")
-endif(OPT_BUILD_SEARCH_SCAN)
-
 add_executable(sdrpp "src/main.cpp" "win32/resources.rc")
 target_link_libraries(sdrpp PRIVATE sdrpp_core)
 
