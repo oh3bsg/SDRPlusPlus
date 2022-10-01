@@ -84,7 +84,7 @@ You are probably going to build in 64 bit so make sure vcpkg installs the correc
 ```
 mkdir build
 cd build
-cmake .. "-DCMAKE_TOOLCHAIN_FILE=<vcpkg install directory>/scripts/buildsystems/vcpkg.cmake" -G "Visual Studio 16 2019"
+cmake .. "-DCMAKE_TOOLCHAIN_FILE=C:/Users/heitt/dev/vcpkg/scripts/buildsystems/vcpkg.cmake" -G "Visual Studio 16 2019"
 cmake --build . --config Release
 ```
 
