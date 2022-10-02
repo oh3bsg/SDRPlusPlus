@@ -109,7 +109,7 @@ private:
 
     void start() {
         if (running) { return; }
-        next_bank(current, stopFreq, interval, frq_mode);
+        get_first_bank(current, stopFreq, interval, frq_mode);
         running = true;
         receiving = false;
         workerThread = std::thread(&NLK_ScannerModule::worker, this);
@@ -263,6 +263,18 @@ private:
             double t = bookmarks["lists"]["General"]["bookmarks"][bname]["frequency"];
             if ((int)frq == (int(t))) {
                 sprintf(name, "%s", bname);
+            }
+        }
+    }
+
+    void get_first_bank(double& startF, double& stopF, double& step, int& mode) {
+        for (uint8_t i=0; i<listNames.size(); i++) {
+            if (this->banks[listNames[i]].selected == true) {
+                startF = this->banks[listNames[i]].frq_start + (gui::waterfall.getViewBandwidth()/2.0);
+                stopF = this->banks[listNames[i]].frq_stop;
+                step = this->banks[listNames[i]].frq_step;
+                mode = this->banks[listNames[i]].frq_mode;
+                return;
             }
         }
     }
