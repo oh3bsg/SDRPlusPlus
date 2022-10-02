@@ -449,9 +449,13 @@ private:
         ImGui::TableSetColumnIndex(2);
         //if (selectedNames.size() != 1 && _this->selectedListName != "") { style::beginDisabled(); }
         if (ImGui::Button(("Edit##_freq_mgr_edt_"/* + _this->name*/)/*.c_str()*/, ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
+            // selectedNames aiheuttaa crashin !!!!!!!!!!!!!!!!!!
             _this->editOpen = true;
-            _this->editedBank = _this->banks[selectedNames[0]];
-            _this->editedBankName = selectedNames[0];
+            _this->editedBank.frq_start = 126200000; //_this->banks[selectedNames[0]].frq_start;
+            _this->editedBank.frq_stop = 130000000; //_this->banks[selectedNames[0]].frq_stop;
+            _this->editedBank.frq_step = 25000; //_this->banks[selectedNames[0]].frq_step;
+            _this->editedBank.frq_mode = 2; //_this->banks[selectedNames[0]].frq_mode;
+            _this->editedBankName = "ÄLÄ KÄYTÄ PAINA CANCEL"; //selectedNames[0];
         }
         //if (selectedNames.size() != 1 && _this->selectedListName != "") { style::endDisabled(); }
 
