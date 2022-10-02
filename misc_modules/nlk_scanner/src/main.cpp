@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <config.h>
+#include <gui/dialogs/dialog_box.h>
 
 using namespace std;
 json bookmarks;
@@ -352,9 +353,9 @@ private:
                 open = false;
 
                 // If editing, delete the original one
-                //if (editOpen) {
-                    //bookmarks.erase(firstEditedBookmarkName);
-                //}
+                if (editOpen) {
+                    banks.erase(firstEditedBankName);
+                }
                 banks[editedBankName] = editedBank;
 
                 saveByName(/*selectedListName*/);
@@ -414,6 +415,13 @@ private:
 
         // TODO: Replace with something that won't iterate every frame
         std::vector<std::string> selectedNames;
+        for (auto& [name, bank] : _this->banks) {
+            if (bank.selected) { 
+                selectedNames.push_back(name);
+                //printf("%s\n", name);
+            }
+        }
+
         //Draw buttons on top of the list
         ImGui::BeginTable(("freq_manager_btn_table"/* + _this->name*/)/*.c_str()*/, 3);
         ImGui::TableNextRow();
@@ -444,33 +452,29 @@ private:
         ImGui::TableSetColumnIndex(1);
         //if (selectedNames.size() == 0 && _this->selectedListName != "") { style::beginDisabled(); }
         if (ImGui::Button(("Remove##_freq_mgr_rem_"/* + _this->name*/)/*.c_str()*/, ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
-            //_this->deleteBookmarksOpen = true;
+            _this->deleteBanksOpen = true;
         }
         //if (selectedNames.size() == 0 && _this->selectedListName != "") { style::endDisabled(); }
         ImGui::TableSetColumnIndex(2);
         //if (selectedNames.size() != 1 && _this->selectedListName != "") { style::beginDisabled(); }
         if (ImGui::Button(("Edit##_freq_mgr_edt_"/* + _this->name*/)/*.c_str()*/, ImVec2(ImGui::GetContentRegionAvail().x, 0))) {
-            // selectedNames aiheuttaa crashin !!!!!!!!!!!!!!!!!!
             _this->editOpen = true;
-            _this->editedBank.frq_start = 126200000; //_this->banks[selectedNames[0]].frq_start;
-            _this->editedBank.frq_stop = 130000000; //_this->banks[selectedNames[0]].frq_stop;
-            _this->editedBank.frq_step = 25000; //_this->banks[selectedNames[0]].frq_step;
-            _this->editedBank.frq_mode = 2; //_this->banks[selectedNames[0]].frq_mode;
-            _this->editedBankName = "ÄLÄ KÄYTÄ PAINA CANCEL"; //selectedNames[0];
+            _this->editedBank = _this->banks[selectedNames[0]];
+            _this->editedBankName = selectedNames[0];
+            _this->firstEditedBankName = selectedNames[0];
         }
         //if (selectedNames.size() != 1 && _this->selectedListName != "") { style::endDisabled(); }
 
         ImGui::EndTable();
-/*
+
         // Bank delete confirm dialog
-        // List delete confirmation
-        if (ImGui::GenericDialog(("freq_manager_del_list_confirm" + _this->name).c_str(), _this->deleteBookmarksOpen, GENERIC_DIALOG_BUTTONS_YES_NO, [_this]() {
-                ImGui::TextUnformatted("Deleting selected bookmaks. Are you sure?");
+        if (ImGui::GenericDialog(("freq_manager_del_list_confirm" + _this->name).c_str(), _this->deleteBanksOpen, GENERIC_DIALOG_BUTTONS_YES_NO, [_this]() {
+                ImGui::TextUnformatted("Deleting selected bank(s). Are you sure?");
             }) == GENERIC_DIALOG_BUTTON_YES) {
-            for (auto& _name : selectedNames) { _this->bookmarks.erase(_name); }
-            _this->saveByName(_this->selectedListName);
+            for (auto& _name : selectedNames) { _this->banks.erase(_name); }
+            _this->saveByName(/*_this->selectedListName*/);
         }
-*/
+
         // Bank list
         if (ImGui::BeginTable(("freq_manager_bkm_table" + _this->name).c_str(), 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_ScrollY, ImVec2(0, 200))) {
             ImGui::TableSetupColumn("Bank name");
@@ -614,6 +618,7 @@ private:
     bool check_booli = false;
     bool createOpen = false;
     bool editOpen = false;
+    bool deleteBanksOpen = false;
     char metadata[45] = "";
     //json bookmarks;
     std::chrono::time_point<std::chrono::high_resolution_clock> lastSignalTime;
@@ -627,6 +632,7 @@ private:
 
     std::map<std::string, search_bank_str> banks;
     std::string editedBankName = "";
+    std::string firstEditedBankName = "";
     search_bank_str editedBank;
     std::vector<std::string> listNames;
 };
