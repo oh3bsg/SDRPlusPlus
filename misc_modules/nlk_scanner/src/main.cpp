@@ -358,6 +358,7 @@ private:
                 banks[editedBankName] = editedBank;
 
                 saveByName(/*selectedListName*/);
+                refreshLists();
             }
             
             //if (applyDisabled) { style::endDisabled(); }
