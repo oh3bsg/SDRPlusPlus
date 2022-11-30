@@ -72,7 +72,7 @@ private:
 
         if (_this->running) { ImGui::BeginDisabled(); }
         scanner_banks_ui(_this);
-        if (_this->running) { ImGui::EndDisabled(); } // ?????
+        if (_this->running) { ImGui::EndDisabled(); }
 
         ImGui::LeftLabel("Level");
         ImGui::SetNextItemWidth(menuWidth - ImGui::GetCursorPosX());
@@ -282,16 +282,20 @@ private:
 
     void next_bank(double& startF, double& stopF, double& step, int& mode) {
         static int i = 0;
+        bool flag = true;
 
-        if (this->banks[listNames[i]].selected == true) {
-            startF = this->banks[listNames[i]].frq_start + (gui::waterfall.getViewBandwidth()/2.0);
-            stopF = this->banks[listNames[i]].frq_stop;
-            step = this->banks[listNames[i]].frq_step;
-            mode = this->banks[listNames[i]].frq_mode;
+        while(flag) {
+            if (this->banks[listNames[i]].selected == true) {
+                startF = this->banks[listNames[i]].frq_start + (gui::waterfall.getViewBandwidth()/2.0);
+                stopF = this->banks[listNames[i]].frq_stop;
+                step = this->banks[listNames[i]].frq_step;
+                mode = this->banks[listNames[i]].frq_mode;
+                flag = false;
+            }
+
+            i++;
+            if (i >= listNames.size()) i = 0;
         }
-
-        i++;
-        if (i >= listNames.size()) i = 0;
     }
 
 // **************************************************************************
